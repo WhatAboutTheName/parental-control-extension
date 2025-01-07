@@ -46,15 +46,16 @@ template.innerHTML = `
 
     </style>
 
-    <div class="container_toggle-button">
+    <label class="container_toggle-button">
         <input type="checkbox" id="check_toggle-button">
-        <label for="check_toggle-button" class="button_toggle-button"></label>
-    </div>
+        <span class="button_toggle-button"></span>
+    </label>
 `;
 
 class ToggleButton extends HTMLElement {
     static formAssociated = true;
     _checkbox = null;
+    checked = false;
 
     constructor() {
         super();
@@ -62,22 +63,23 @@ class ToggleButton extends HTMLElement {
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
         this._checkbox = this.shadowRoot.querySelector('#check_toggle-button');
-        this._internals.setFormValue(this.getAttribute('checked') ? 'on' : 'off');
+        this._checkbox.checked = this.getAttribute('checked');
+        this._internals.setFormValue(this._checkbox.checked ? 'on' : null);
+        this.checked = this._checkbox.checked;
     }
 
     connectedCallback() {
         this.addEventListener('click', this._onClick.bind(this));
-    }
-
-    _updateLayout(isChecked) {
-        const classList = this._checkbox.classList;
-        isChecked ? classList.add('checked') : classList.remove('checked');
+        this._checkbox.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+        });
     }
 
     _syncCheckedValue(isNewChecked) {
-        this._internals.setFormValue(isNewChecked ? 'on' : 'off');
-        this._updateLayout(isNewChecked);
+        this._internals.setFormValue(isNewChecked ? 'on' : null);
         this._internals.ariaChecked = isNewChecked;
+        this.checked = isNewChecked;
     }
 
     _onClick() {
@@ -90,7 +92,7 @@ class ToggleButton extends HTMLElement {
         return this._checkbox.hasAttribute('checked');
     }
 
-    set checked(isNewValue) {
+    set checked(_) {
         this._checkbox.setAttribute('checked');
     }
 }
