@@ -1,5 +1,5 @@
 const action = document.getElementById('action');
-const showButton = document.getElementById('show-button');
+const saveHistory = document.getElementById('save-history');
 
 action.addEventListener('click', function (e) {
     e.stopPropagation();
@@ -9,7 +9,7 @@ action.addEventListener('click', function (e) {
     console.log(Object.fromEntries(data.entries()), '    form');
 });
 
-showButton.addEventListener('click', function (e) {
+saveHistory.addEventListener('click', function (e) {
     e.stopPropagation();
     console.log(e, '   logic show e');
 });
