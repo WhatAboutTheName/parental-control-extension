@@ -1,19 +1,42 @@
-const routes = {
-    "general": "/templates/general.html",
-    "history": "/templates/history.html",
-};
+export class Router {
+    static contentElement = document.getElementById('content');
+    _prevTarget;
+    _defaultRouteName;
 
-const locationHandler = async () => {
-    const hash = window.location.hash.replace("#", "");
-    const route = routes[hash] || routes['general'];
-    document.getElementById('content').innerHTML = await fetch(route).then((data) => data.text());
-    if (hash !== 'general') {
-        const scriptTag = document.getElementsByTagName('script')[0];
-        const script = await fetch(scriptTag.src).then((data) => data.text());
-        eval(script);
+    constructor(routes, defaultRouteName) {
+        this.addEvents();
+        this._routes = routes;
+        this._defaultRouteName = defaultRouteName;
+        this.locationHandler();
     }
-};
 
-window.addEventListener("hashchange", locationHandler);
+    addEvents() {
+        const elements = document.querySelectorAll('[routerLink]');
+        this._prevTarget = elements[0];
+        elements.forEach((el) => {
+            if (el.getAttribute('routerLink') === this._defaultRouteName) {
+                this.setStyle(el);
+            }
+            el.addEventListener('click', (ev) => {
+                ev.stopPropagation();
+                this.locationHandler(ev.target.getAttribute('routerLink'));
+                this.setStyle(ev.target);
+            });
+        });
+    }
 
-locationHandler();
+    setStyle(target) {
+        this._prevTarget?.classList.remove('selected-route');
+        this._prevTarget = target;
+        this._prevTarget.classList.add('selected-route');
+    }
+
+    locationHandler = async (pathname) => {
+        const route = this._routes[pathname] || this._routes[this._defaultRouteName];
+        const value = Object.values(route.component)[0];
+        if ('constructor' in value) {
+            new value();
+        }
+        Router.contentElement.innerHTML = await fetch(route.template).then((data) => data.text());
+    };
+}

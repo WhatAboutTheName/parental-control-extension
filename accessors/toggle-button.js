@@ -4,7 +4,6 @@ template.innerHTML = `
     <style>
 
         .container_toggle-button {
-            min-width: 100%;
             background-color: #ffffff;
             display: flex;
             align-items: center;
@@ -13,8 +12,8 @@ template.innerHTML = `
 
         .button_toggle-button {
             background-color: #d2d2d2;
-            min-width: 80px;
-            min-height: 40px;
+            min-width: 40px;
+            min-height: 20px;
             border-radius: 100px;
             cursor: pointer;
             position: relative;
@@ -25,10 +24,10 @@ template.innerHTML = `
             position: absolute;
             content: '';
             background-color: #ffffff;
-            min-width: 30px;
-            min-height: 30px;
+            width: 15px;
+            height: 15px;
             border-radius: 100px;
-            margin: 5px;
+            margin: 2px;
             transition: 0.2s;
         }
 
@@ -37,7 +36,7 @@ template.innerHTML = `
         }
 
         input:checked + .button_toggle-button::before {
-            transform: translateX(40px);
+            transform: translateX(20px);
         }
 
         input {
