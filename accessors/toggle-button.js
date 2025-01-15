@@ -51,7 +51,7 @@ template.innerHTML = `
     </label>
 `;
 
-class ToggleButton extends HTMLElement {
+export class ToggleButton extends HTMLElement {
     static formAssociated = true;
     _checkbox = null;
     checked = false;

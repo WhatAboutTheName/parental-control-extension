@@ -33,10 +33,7 @@ export class Router {
 
     locationHandler = async (pathname) => {
         const route = this._routes[pathname] || this._routes[this._defaultRouteName];
-        const value = Object.values(route.component)[0];
-        if ('constructor' in value) {
-            new value();
-        }
+        new route.component();
         Router.contentElement.innerHTML = await fetch(route.template).then((data) => data.text());
     };
 }
